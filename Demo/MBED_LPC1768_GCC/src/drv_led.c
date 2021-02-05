@@ -29,7 +29,7 @@
 #include "FreeRTOS.h"
 
 /* Demo application includes. */
-#include "partest.h"
+#include "drv_led.h"
 
 #define LED_2 ( 1UL << 18UL )
 #define LED_3 ( 1UL << 20UL )
