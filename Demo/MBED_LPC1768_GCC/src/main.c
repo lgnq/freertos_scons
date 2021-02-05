@@ -62,7 +62,8 @@ tick hook. */
 #define mainCHECK_DELAY ((TickType_t)5000 / portTICK_PERIOD_MS)
 
 /* The toggle rate for the LED. */
-#define mainLED_TOGGLE_RATE					( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define LED0_TOGGLE_RATE					( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define LED1_TOGGLE_RATE					( ( TickType_t ) 100 / portTICK_PERIOD_MS )
 
 /* Task priorities. */
 #define mainFLASH_TASK_PRIORITY (tskIDLE_PRIORITY + 2)
@@ -94,7 +95,7 @@ char *pcGetTaskStatusMessage(void);
 /* Holds the status message displayed by the WEB server. */
 static char *pcStatusMessage = mainPASS_STATUS_MESSAGE;
 
-static void prvFlashTask(void *pvParameters)
+static void led0_task(void *pvParameters)
 {
 	TickType_t xLastFlashTime;
 
@@ -106,11 +107,31 @@ static void prvFlashTask(void *pvParameters)
 	{
 		led_on(0);
 		/* Simply toggle the LED between delays. */
-		vTaskDelayUntil(&xLastFlashTime, mainLED_TOGGLE_RATE);
+		vTaskDelayUntil(&xLastFlashTime, LED0_TOGGLE_RATE);
 		
 		led_off(0);
 		/* Simply toggle the LED between delays. */
-		vTaskDelayUntil(&xLastFlashTime, mainLED_TOGGLE_RATE);
+		vTaskDelayUntil(&xLastFlashTime, LED0_TOGGLE_RATE);
+	}
+}
+
+static void led1_task(void *pvParameters)
+{
+	TickType_t xLastFlashTime;
+
+	/* We need to initialise xLastFlashTime prior to the first call to
+	vTaskDelayUntil(). */
+	xLastFlashTime = xTaskGetTickCount();
+
+	for (;;)
+	{
+		led_on(1);
+		/* Simply toggle the LED between delays. */
+		vTaskDelayUntil(&xLastFlashTime, LED1_TOGGLE_RATE);
+		
+		led_off(1);
+		/* Simply toggle the LED between delays. */
+		vTaskDelayUntil(&xLastFlashTime, LED1_TOGGLE_RATE);
 	}
 }
 
@@ -120,7 +141,8 @@ int main(void)
 	prvSetupHardware();
 
 	/* Create the simple LED flash task. */
-	xTaskCreate(prvFlashTask, "Flash", configMINIMAL_STACK_SIZE, (void *)NULL, mainFLASH_TASK_PRIORITY, NULL);
+	xTaskCreate(led0_task, "LED0", configMINIMAL_STACK_SIZE, (void *)NULL, mainFLASH_TASK_PRIORITY, NULL);
+	xTaskCreate(led1_task, "LED1", configMINIMAL_STACK_SIZE, (void *)NULL, mainFLASH_TASK_PRIORITY, NULL);
 
 	/* Display the IP address, then create the uIP task.  The WEB server runs
 	in this task.  --- Due to tool changes since this demo was created the LCD

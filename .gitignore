@@ -6,3 +6,4 @@
 *.hex
 *.map
 *.elf
+*.o
