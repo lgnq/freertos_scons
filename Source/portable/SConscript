@@ -13,7 +13,7 @@ if config.PLATFORM == 'GCC':
 if config.PLATFORM == 'iar':
 	src = Glob(path + '/*.c') + Glob(path + '/*_iar.S')
 
-src += [FREERTOS_ROOT + '/Source/portable/MemMang/heap_4.c']
+src += Glob('MemMang/*_4.c')
 
 inc = [FREERTOS_ROOT + '/Source/portable/' + config.PLATFORM + '/' + config.CPU]
 
