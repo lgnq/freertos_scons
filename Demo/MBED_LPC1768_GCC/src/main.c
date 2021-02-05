@@ -108,9 +108,13 @@ static void prvFlashTask(void *pvParameters)
 
 	for (;;)
 	{
+		led_on(0);
 		/* Simply toggle the LED between delays. */
 		vTaskDelayUntil(&xLastFlashTime, mainLED_TOGGLE_RATE);
-		vParTestToggleLED(0);
+		
+		led_off(0);
+		/* Simply toggle the LED between delays. */
+		vTaskDelayUntil(&xLastFlashTime, mainLED_TOGGLE_RATE);
 	}
 }
 
@@ -297,7 +301,7 @@ void prvSetupHardware(void)
 	LPC_SC->PCLKSEL0 = 0x05555555;
 
 	/* Configure the LEDs. */
-	vParTestInitialise();
+	led_init();
 }
 /*-----------------------------------------------------------*/
 

@@ -31,72 +31,52 @@
 /* Demo application includes. */
 #include "drv_led.h"
 
-#define LED_2 (1UL << 18UL)
-#define LED_3 (1UL << 20UL)
-#define LED_4 (1UL << 21UL)
-#define LED_5 (1UL << 23UL)
-
-#define partstFIO1_BITS (LED_2 | LED_3 | LED_4 | LED_5)
-#define partstNUM_LEDS (4)
-
-static unsigned long ulLEDs[] = {LED_3, LED_2, LED_5, LED_4};
-
-/*-----------------------------------------------------------
- * Simple parallel port IO routines.
- *-----------------------------------------------------------*/
-
-void vParTestInitialise(void)
+void led_init(void)
 {
-	/* LEDs on port 1. */
-	LPC_GPIO1->FIODIR = partstFIO1_BITS;
-
-	/* Start will all LEDs off. */
-	LPC_GPIO1->FIOCLR = partstFIO1_BITS;
+    GPIO_SetDir(1, 1<<18, 1);
+    GPIO_SetDir(1, 1<<20, 1);
+    GPIO_SetDir(1, 1<<21, 1);
+    GPIO_SetDir(1, 1<<23, 1);
 }
-/*-----------------------------------------------------------*/
 
-void vParTestSetLED(unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue)
+void led_on(char led)
 {
-	if (uxLED < partstNUM_LEDS)
-	{
-		/* Set of clear the output. */
-		if (xValue)
-		{
-			LPC_GPIO1->FIOCLR = ulLEDs[uxLED];
-		}
-		else
-		{
-			LPC_GPIO1->FIOSET = ulLEDs[uxLED];
-		}
-	}
+    switch (led)
+    {
+    case 0: /* P1.18 = 1 */
+        GPIO_SetValue(1, 1<<18);
+        break;
+    case 1: /* P1.20 = 1 */
+        GPIO_SetValue(1, 1<<20);
+        break;
+    case 2: /* P1.21 = 1 */
+        GPIO_SetValue(1, 1<<21);
+        break;
+    case 3: /* P1.23 = 1 */
+        GPIO_SetValue(1, 1<<23);
+        break;
+    default:
+        break;
+    }
 }
-/*-----------------------------------------------------------*/
 
-void vParTestToggleLED(unsigned portBASE_TYPE uxLED)
+void led_off(char led)
 {
-	if (uxLED < partstNUM_LEDS)
-	{
-		if (LPC_GPIO1->FIOPIN & ulLEDs[uxLED])
-		{
-			LPC_GPIO1->FIOCLR = ulLEDs[uxLED];
-		}
-		else
-		{
-			LPC_GPIO1->FIOSET = ulLEDs[uxLED];
-		}
-	}
+    switch(led)
+    {
+    case 0: /* P1.18 = 0 */
+        GPIO_ClearValue(1, 1<<18);
+        break;
+    case 1: /* P1.20 = 0 */
+        GPIO_ClearValue(1, 1<<20);
+        break;
+    case 2: /* P1.21 = 0 */
+        GPIO_ClearValue(1, 1<<21);
+        break;
+    case 3: /* P1.23 = 0 */
+        GPIO_ClearValue(1, 1<<23);
+        break;
+    default:
+        break;
+    }
 }
-/*-----------------------------------------------------------*/
-
-unsigned portBASE_TYPE uxParTextGetLED(unsigned portBASE_TYPE uxLED)
-{
-	if (uxLED < partstNUM_LEDS)
-	{
-		return (LPC_GPIO1->FIOPIN & ulLEDs[uxLED]);
-	}
-	else
-	{
-		return 0;
-	}
-}
-/*-----------------------------------------------------------*/
