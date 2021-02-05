@@ -1,0 +1,8 @@
+
+*.dblite
+*.pyc
+*.o
+*.bin
+*.hex
+*.map
+*.elf
