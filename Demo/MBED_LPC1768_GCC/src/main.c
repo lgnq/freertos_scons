@@ -200,6 +200,8 @@ char *pcGetTaskStatusMessage(void)
 
 void prvSetupHardware(void)
 {
+#if defined(__USE_CMSIS)
+#else
 	/* Disable peripherals power. */
 	LPC_SC->PCONP = 0;
 
@@ -290,6 +292,7 @@ void prvSetupHardware(void)
 
 	/*  Setup the peripheral bus to be the same as the CPU output (100 MHz). */
 	LPC_SC->PCLKSEL0 = 0x05555555;
+#endif
 
 	/* Configure the LEDs. */
 	led_init();

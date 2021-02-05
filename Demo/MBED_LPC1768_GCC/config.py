@@ -34,7 +34,7 @@ if PLATFORM == 'GCC':
 
     TARGET_EXT = 'elf'
 
-    DEVICE = ' -mcpu=cortex-m3 -mthumb'
+    DEVICE = ' -mcpu=cortex-m3 -mthumb -D__USE_CMSIS'
     CFLAGS = DEVICE
     CXXFLAGS = CFLAGS
     AFLAGS = ' -c' + DEVICE + ' -x assembler-with-cpp'
