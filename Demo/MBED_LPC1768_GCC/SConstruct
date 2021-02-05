@@ -1,0 +1,63 @@
+import os
+import sys
+import config
+
+if os.getenv('FREERTOS_ROOT'):
+    FREERTOS_ROOT = os.getenv('FREERTOS_ROOT')
+else:
+    FREERTOS_ROOT = os.path.normpath(os.getcwd() + '/../..')
+
+Export('FREERTOS_ROOT')
+Export('config')
+
+TARGET = 'rtt_mbed.' + config.TARGET_EXT
+
+env = Environment(
+    tools = ['mingw'],
+	
+    AS = config.AS, ASFLAGS = config.AFLAGS,
+	CC = config.CC, CCFLAGS = config.CFLAGS,
+	AR = config.AR, ARFLAGS = '-rc',
+	LINK = config.LINK, LINKFLAGS = config.LFLAGS,
+
+    ASCOMSTR   = "Compiling $TARGET", 
+    CCCOMSTR   = "Compiling $TARGET", 
+    LINKCOMSTR = "Linking $TARGET",)
+
+PROJECT    = 'mbed'
+HEX_TARGET = PROJECT + '.hex'
+BIN_TARGET = PROJECT + '.bin'
+
+# Application some variables
+src = []
+inc = []
+
+# Search all SConscript file and add src/header files
+for root, dirs, files in os.walk(str(Dir('#'))):
+    for item in files:
+        if item == 'SConscript':
+            temp = SConscript(os.path.join(root, item), variant_dir = 'build/' + root, duplicate = 0)
+
+            src += temp['src']
+            inc += temp['inc']          
+
+# # include rtt
+temp = SConscript(FREERTOS_ROOT + '/Source/SConscript', variant_dir = 'build/freertos/Source/', duplicate = 0)
+src += temp['src']
+inc += temp['inc']   
+
+temp = SConscript(FREERTOS_ROOT + '/Source/portable/SConscript', variant_dir = 'build/Source/portable/', duplicate = 0)
+src += temp['src']
+inc += temp['inc']  
+
+# Building
+out = env.Program(TARGET, src, CPPPATH = inc)
+env.SideEffect(PROJECT+'.map', out)
+
+# Post Action
+a1 = env.AddPostAction(TARGET, config.OBJCPY + ' -Oihex ' + '$TARGET ' + HEX_TARGET)
+a2 = env.AddPostAction(TARGET, config.OBJCPY + ' -Obinary -S ' + '$TARGET ' + BIN_TARGET)
+env.SideEffect(HEX_TARGET, a1)
+env.SideEffect(BIN_TARGET, a2)
+
+env.AddPostAction(TARGET, config.SIZE + ' $TARGET')

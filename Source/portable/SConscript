@@ -1,0 +1,22 @@
+Import('FREERTOS_ROOT')
+Import('config')
+
+path = config.PLATFORM + '/' + config.CPU
+
+# The set of source files associated with this SConscript file.
+if config.PLATFORM == 'armcc':
+	src = Glob(path + '/*.c') + Glob(path + '/*_rvds.S')
+
+if config.PLATFORM == 'GCC':
+	src = Glob(path + '/*.c') + Glob(path + '/*_gcc.S')
+
+if config.PLATFORM == 'iar':
+	src = Glob(path + '/*.c') + Glob(path + '/*_iar.S')
+
+src += [FREERTOS_ROOT + '/Source/portable/MemMang/heap_4.c']
+
+inc = [FREERTOS_ROOT + '/Source/portable/' + config.PLATFORM + '/' + config.CPU]
+
+group = {'src' : src, 'inc' : inc}
+
+Return('group')

@@ -1,0 +1,14 @@
+import os
+
+src   = [Glob('*.c')]
+src  += [Glob('*.s')]
+
+inc   = [
+    os.path.abspath('.'),
+    os.path.abspath('./inc'),
+    os.path.abspath('./include')
+]
+
+group = {'src' : src, 'inc' : inc}
+
+Return('group')
