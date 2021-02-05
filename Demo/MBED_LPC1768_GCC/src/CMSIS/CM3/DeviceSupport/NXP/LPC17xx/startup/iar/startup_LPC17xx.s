@@ -1,16 +1,16 @@
 ;/*****************************************************************************
 ; * @file:    startup_LPC17xx.s
-; * @purpose: CMSIS Cortex-M3 Core Device Startup File 
-; *           for the NXP LPC17xx Device Series 
-; * @version: V1.02
-; * @date:    31. July 2009
+; * @purpose: CMSIS Cortex-M3 Core Device Startup File
+; *           for the NXP LPC17xx Device Series
+; * @version: V1.03
+; * @date:    09. February 2010
 ; *----------------------------------------------------------------------------
 ; *
-; * Copyright (C) 2009 ARM Limited. All rights reserved.
+; * Copyright (C) 2010 ARM Limited. All rights reserved.
 ; *
-; * ARM Limited (ARM) is supplying this software for use with Cortex-Mx 
-; * processor based microcontrollers.  This file can be freely distributed 
-; * within development tools that are supporting such ARM based processors. 
+; * ARM Limited (ARM) is supplying this software for use with Cortex-Mx
+; * processor based microcontrollers.  This file can be freely distributed
+; * within development tools that are supporting such ARM based processors.
 ; *
 ; * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 ; * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -43,7 +43,7 @@
         SECTION CSTACK:DATA:NOROOT(3)
 
         SECTION .intvec:CODE:NOROOT(2)
-	
+
         EXTERN  __iar_program_start
         EXTERN  SystemInit
         PUBLIC  __vector_table
@@ -108,6 +108,8 @@ __vector_table_0x1c
         DCD     MCPWM_IRQHandler          ; 46: Motor Control PWM
         DCD     QEI_IRQHandler            ; 47: Quadrature Encoder Interface
         DCD     PLL1_IRQHandler           ; 48: PLL1 Lock (USB PLL)
+        DCD		USBActivity_IRQHandler	  ; 49: USB Activity Interrupt
+        DCD		CANActivity_IRQHandler	  ; 50: CAN Activity Interrupt
 __Vectors_End
 
 __Vectors       EQU   __vector_table
@@ -337,5 +339,15 @@ QEI_IRQHandler
         SECTION .text:CODE:REORDER(1)
 PLL1_IRQHandler
         B PLL1_IRQHandler
+
+        PUBWEAK USBActivity_IRQHandler
+        SECTION .text:CODE:REORDER(1)
+USBActivity_IRQHandler
+        B USBActivity_IRQHandler
+
+        PUBWEAK CANActivity_IRQHandler
+        SECTION .text:CODE:REORDER(1)
+CANActivity_IRQHandler
+        B CANActivity_IRQHandler
 
         END
