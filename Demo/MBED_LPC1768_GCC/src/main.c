@@ -56,7 +56,6 @@
 #include "task.h"
 #include "drv_led.h"
 
-/*-----------------------------------------------------------*/
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook. */
@@ -80,7 +79,6 @@ without an error being reported. */
 #define PCONP_PCGPIO 0x00008000
 #define PLLFEED_FEED1 0x000000AA
 #define PLLFEED_FEED2 0x00000055
-/*-----------------------------------------------------------*/
 
 /*
  * Configure the hardware for the demo.
@@ -92,12 +90,10 @@ static void prvSetupHardware(void);
  */
 char *pcGetTaskStatusMessage(void);
 
-/*-----------------------------------------------------------*/
 
 /* Holds the status message displayed by the WEB server. */
 static char *pcStatusMessage = mainPASS_STATUS_MESSAGE;
 
-/*-----------------------------------------------------------*/
 static void prvFlashTask(void *pvParameters)
 {
 	TickType_t xLastFlashTime;
@@ -120,8 +116,6 @@ static void prvFlashTask(void *pvParameters)
 
 int main(void)
 {
-	char cIPAddress[16]; /* Enough space for "xxx.xxx.xxx.xxx\0". */
-
 	/* Configure the hardware for use by this demo. */
 	prvSetupHardware();
 
@@ -145,7 +139,6 @@ int main(void)
 	for (;;)
 		;
 }
-/*-----------------------------------------------------------*/
 
 void vApplicationTickHook(void)
 {
@@ -198,14 +191,12 @@ void vApplicationTickHook(void)
 		// }
 	}
 }
-/*-----------------------------------------------------------*/
 
 char *pcGetTaskStatusMessage(void)
 {
 	/* Not bothered about a critical section here. */
 	return pcStatusMessage;
 }
-/*-----------------------------------------------------------*/
 
 void prvSetupHardware(void)
 {
@@ -303,7 +294,6 @@ void prvSetupHardware(void)
 	/* Configure the LEDs. */
 	led_init();
 }
-/*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
@@ -315,7 +305,6 @@ void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 	for (;;)
 		;
 }
-/*-----------------------------------------------------------*/
 
 void vConfigureTimerForRunTimeStats(void)
 {
@@ -344,4 +333,3 @@ void vConfigureTimerForRunTimeStats(void)
 	/* Start the counter. */
 	LPC_TIM0->TCR = TCR_COUNT_ENABLE;
 }
-/*-----------------------------------------------------------*/
