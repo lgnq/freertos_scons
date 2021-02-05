@@ -54,20 +54,7 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-
-// #include "led.h"
-
-/* Demo app includes. */
-// #include "BlockQ.h"
-// #include "integer.h"
-// #include "blocktim.h"
-// #include "flash.h"
-#include "partest.h"
-// #include "semtest.h"
-// #include "PollQ.h"
-// #include "GenQTest.h"
-// #include "QPeek.h"
-// #include "recmutex.h"
+#include "drv_led.h"
 
 /*-----------------------------------------------------------*/
 
@@ -79,12 +66,6 @@ tick hook. */
 #define mainLED_TOGGLE_RATE					( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
 
 /* Task priorities. */
-#define mainQUEUE_POLL_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainSEM_TEST_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainBLOCK_Q_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainUIP_TASK_PRIORITY (tskIDLE_PRIORITY + 3)
-#define mainINTEGER_TASK_PRIORITY (tskIDLE_PRIORITY)
-#define mainGEN_QUEUE_TASK_PRIORITY (tskIDLE_PRIORITY)
 #define mainFLASH_TASK_PRIORITY (tskIDLE_PRIORITY + 2)
 
 /* The WEB server has a larger stack as it utilises stack hungry string
@@ -105,17 +86,6 @@ without an error being reported. */
  * Configure the hardware for the demo.
  */
 static void prvSetupHardware(void);
-
-/*
- * The task that handles the uIP stack.  All TCP/IP processing is performed in
- * this task.
- */
-extern void vuIP_Task(void *pvParameters);
-
-/*
- * The task that handles the USB stack.
- */
-extern void vUSBTask(void *pvParameters);
 
 /*
  * Simply returns the current status message for display on served WEB pages.
@@ -150,21 +120,6 @@ int main(void)
 
 	/* Configure the hardware for use by this demo. */
 	prvSetupHardware();
-
-	/* Start the standard demo tasks.  These are just here to exercise the
-	kernel port and provide examples of how the FreeRTOS API can be used. */
-	// vStartBlockingQueueTasks(mainBLOCK_Q_PRIORITY);
-	// vCreateBlockTimeTasks();
-	// vStartSemaphoreTasks(mainSEM_TEST_PRIORITY);
-	// vStartPolledQueueTasks(mainQUEUE_POLL_PRIORITY);
-	// vStartIntegerMathTasks(mainINTEGER_TASK_PRIORITY);
-	// vStartGenericQueueTasks(mainGEN_QUEUE_TASK_PRIORITY);
-	// vStartQueuePeekTasks();
-	// vStartRecursiveMutexTasks();
-	// vStartLEDFlashTasks(mainFLASH_TASK_PRIORITY);
-
-	/* Create the USB task. */
-	// xTaskCreate(vLEDTask, "LED", configMINIMAL_STACK_SIZE, (void *)NULL, tskIDLE_PRIORITY, NULL);
 
 	/* Create the simple LED flash task. */
 	xTaskCreate(prvFlashTask, "Flash", configMINIMAL_STACK_SIZE, (void *)NULL, mainFLASH_TASK_PRIORITY, NULL);
